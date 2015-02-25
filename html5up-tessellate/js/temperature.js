@@ -152,21 +152,21 @@ $(function() {
             tempC = data.tempC;
             tempF = data.tempF;
         } else {
-            tempC = data.windChill;
             tempF = data.windChill;
+            tempC = (tempF - 32)*5/9;
         }
     }
 
     // 4. Compute and set the can-I-go-out message
     function setCanI() {
         switch (true) {
-            case data.tempC <= low:
+            case tempC <= low:
                 canI = msg1;
                 break;
-            case low < data.tempC && data.tempC <= high:
+            case low < tempC && tempC <= high:
                 canI = msg2;
                 break;
-            case high < data.tempC:
+            case high < tempC:
                 canI = msg3;
                 break;
             default:
@@ -229,14 +229,14 @@ $(function() {
         // write the temperature and wind in unit of choice
         if (metric) {
             // set the summary
-            writeS(1, data.tempC + ' °C');
+            writeS(1, tempC + ' °C');
             // writeS(2, windiness);
             writeS(2, Math.floor(1.61 * data.wind) + ' km/h ' + windiness);
             // set the detail
             writeD(0, 'range ' + data.lowC + ' ~ ' + data.highC + ' °C');
             writeD(3, data.tmrlowC + ' ~ ' + data.tmrhighC + ' °C');
         } else {
-            writeS(1, data.tempF + ' °F');
+            writeS(1, tempF + ' °F');
             writeS(2, data.wind + ' mph ' + windiness);
             writeD(0, 'range ' + data.lowF + ' ~ ' + data.highF + ' °F');
             writeD(3, data.tmrlowF + ' ~ ' + data.tmrhighF + ' °F');
