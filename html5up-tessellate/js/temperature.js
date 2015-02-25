@@ -3,6 +3,9 @@
 // File for the weather app
 $(function() {
 
+    // load body after done loading (html body initially hidden)
+    document.getElementsByTagName("body")[0].style.visibility = "visible";
+
     // Prototype:
     // mode 1:
     // Can I go out?
@@ -177,8 +180,6 @@ $(function() {
     // Display functions //
     ///////////////////////
 
-
-
     // access elements to display
     // The weather summary
     var $summary = $('ul#weatherSummary').children();
@@ -193,9 +194,10 @@ $(function() {
 
     // Helper: write the weather summary to element
     function writeS(i, msg) {
-            $summary.eq(i).children().text(msg);
-        }
-        // Helper: write the weather detail, tho hidden first
+        $summary.eq(i).children().text(msg);
+    }
+
+    // Helper: write the weather detail, tho hidden first
     function writeD(i, msg) {
         $detail.eq(i).children().text(msg);
     }
@@ -228,13 +230,14 @@ $(function() {
         if (metric) {
             // set the summary
             writeS(1, data.tempC + ' °C');
-            writeS(2, Math.floor(1.61 * data.wind) + ' km/h');
+            // writeS(2, windiness);
+            writeS(2, Math.floor(1.61 * data.wind) + ' km/h ' + windiness);
             // set the detail
             writeD(0, 'range ' + data.lowC + ' ~ ' + data.highC + ' °C');
             writeD(3, data.tmrlowC + ' ~ ' + data.tmrhighC + ' °C');
         } else {
             writeS(1, data.tempF + ' °F');
-            writeS(2, data.wind + ' mph');
+            writeS(2, data.wind + ' mph ' + windiness);
             writeD(0, 'range ' + data.lowF + ' ~ ' + data.highF + ' °F');
             writeD(3, data.tmrlowF + ' ~ ' + data.tmrhighF + ' °F');
         }
@@ -264,16 +267,6 @@ $(function() {
 
 
 
-    // Primary method: set the display and add eventlisteners for animation
-    function setDisplay() {
-        writeAll();
-
-        // addEventListener, whenever clicked, switch unit, 
-        $('div#summaryBox').on('click', flipUnit);
-        // or click for detail dropdown
-        $('#detailBox').on('click', toggleDetail);
-    }
-
     // Primary method: Write the Can-I-go-out separately as failsafe for function-chaining
     function getCanI() {
         // run all functions to get CanI message
@@ -285,6 +278,21 @@ $(function() {
 
         // show the canI message
         writeS(0, canI);
+    }
+
+
+
+    // Primary method: set the display and add eventlisteners for animation
+    function setDisplay() {
+        // reset, and call
+        metric = false;
+        getCanI();
+        writeAll();
+
+        // addEventListener, whenever clicked, switch unit, 
+        $('div#summaryBox').on('click', flipUnit);
+        // or click for detail dropdown
+        $('#detailBox').on('click', toggleDetail);
     }
 
 
@@ -321,9 +329,7 @@ $(function() {
                 };
 
                 // Reset, display the app once data loaded
-                metric = false;
                 setDisplay();
-                getCanI();
 
             },
             // error handling
@@ -357,7 +363,6 @@ $(function() {
     setInterval(function() {
         loadWeather(coor);
     }, 300000);
-
 
 
 
