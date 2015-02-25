@@ -1,6 +1,6 @@
-// try request geolocation upon loading
+// Author: Wah Loon Keng, Feb 2015
 
-
+// File for the weather app
 $(function() {
 
     // Prototype:
@@ -290,11 +290,8 @@ $(function() {
 
 
 
-    var locsaved;
-    // Method to load weather from simpleWeather.js
+    // Primary method to load weather from simpleWeather.js
     function loadWeather(location) {
-        locsaved = location;
-        // first call, fetch data in metric units
         $.simpleWeather({
             location: location,
             unit: 'f',
@@ -323,10 +320,10 @@ $(function() {
 
                 };
 
-                // display the app once data successfully loaded
+                // Reset, display the app once data loaded
+                metric = false;
                 setDisplay();
                 getCanI();
-
 
             },
             // error handling
@@ -338,53 +335,28 @@ $(function() {
     }
 
 
-    ///////////////////////
-    // DO ERROR HANDLING //
-    ///////////////////////
+    //////////////////////////
+    // Actual Function Call //
+    //////////////////////////
+    // saved coordinate to refresh-call
+    var coor;
 
-    // if ("geolocation" in navigator) {
-    //   $('.js-geolocation').writeS(); 
-    // } else {
-    //   $('.js-geolocation').hide();
-    // }
-
-    // var lat, lon, coor;
-
-    // function savePosition(position) {
-    //     lat = position.coords.latitude;
-    //     lon = position.coords.longitude;
-    //     coor = lat + ',' + lon;
-    //     // $('#location').html('<p>' + lat + ',' + lon + '</p>');
-    //     $('#location').html('<p>' + coor + '</p>');
-    // }
-
-
-    // // auto update weather
-    // $(document).ready(function() {  
-    //   getWeather(); //Get the initial weather.
-    //   setInterval(getWeather, 600000); //Update the weather every 10 minutes.
-    // });
-
-    // navigator.geolocation.getCurrentPosition(function(position){savePosition(position)});
-    // loadWeather(coor);
-    // loadWeather("40.697095519226686,-75.20947240078218");
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
-            loadWeather(position.coords.latitude + ',' + position.coords.longitude); //load weather using your lat/lng coordinates
+            // save the coor
+            coor = position.coords.latitude + ',' + position.coords.longitude;
+            // load the weather
+            loadWeather(coor);
         });
-
+        // if doesn't support geolocation
     } else {
         writeS(0, ":( Your browser doesn't support geolocation");
     }
 
-
-
-    // Not worth it, do later
-    // loadWeather2(locsaved);
-    // loadWeather2("40.697095519226686,-75.20947240078218");
-
-
-
+    // autorefresh per interval
+    setInterval(function() {
+        loadWeather(coor);
+    }, 300000);
 
 
 
