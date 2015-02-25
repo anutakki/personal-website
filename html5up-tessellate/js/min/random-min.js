@@ -1,0 +1,1 @@
+$(function(){function e(e){var a=$(this).attr("id");switch(a){case"binary":o=2;break;case"base10":o=10}n.remove(),r.show(),e.preventDefault?e.preventDefault():e.returnValue=!1}function a(){var e=500;t.text(Math.floor(Math.random()*o)),t.fadeTo(0,0).fadeTo(e,1)}var r=$("li#generator"),t=r.children();r.hide();var n=$(".random li:gt(0)"),o;n.on("click",e),r.on("click",a)});
