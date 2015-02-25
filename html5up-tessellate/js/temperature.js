@@ -153,7 +153,7 @@ $(function() {
             tempF = data.tempF;
         } else {
             tempF = data.windChill;
-            tempC = (tempF - 32)*5/9;
+            tempC = Math.floor((tempF - 32)*5/9);
         }
     }
 
